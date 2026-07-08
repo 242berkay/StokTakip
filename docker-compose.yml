@@ -34,6 +34,10 @@ services:
       DB_PORT: "1433"
       DB_ODBC_DRIVER: "ODBC Driver 18 for SQL Server"
       DB_EXTRA_PARAMS: "TrustServerCertificate=yes"
+      DJANGO_SUPERUSER_USERNAME: "admin"
+      DJANGO_SUPERUSER_PASSWORD: "admin123"
+      DJANGO_SUPERUSER_EMAIL: "admin@example.com"
+    command: sh -c "python manage.py migrate && python manage.py ensure_superuser && python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     depends_on:

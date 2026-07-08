@@ -14,16 +14,21 @@ No local ODBC/SQL Server install needed; everything runs in containers.
 
 ```bash
 docker compose up -d --build
-docker compose exec web python manage.py createsuperuser
 ```
 
-- Admin: http://localhost:8000/admin
+- Admin: http://localhost:8000/admin (default login: `admin` / `admin123`)
 - API root: http://localhost:8000/api/
 - Products: http://localhost:8000/api/products
 - Report: http://localhost:8000/api/orders/report?period=daily&date=2026-07-08
 
 The `web` container waits for SQL Server to be healthy, creates the `StokTakip`
-database if it does not exist, runs migrations, and starts the dev server.
+database if it does not exist, runs migrations, **creates the superuser
+automatically** (via `ensure_superuser`, idempotent), and starts the dev server.
+No manual `createsuperuser` step is needed.
+
+The superuser credentials come from `DJANGO_SUPERUSER_USERNAME` /
+`DJANGO_SUPERUSER_PASSWORD` / `DJANGO_SUPERUSER_EMAIL` (set in
+`docker-compose.yml`; change them for anything beyond local dev).
 
 To stop / reset:
 

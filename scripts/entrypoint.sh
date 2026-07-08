@@ -14,5 +14,9 @@ echo "Ensuring database [${DB_NAME}] exists..."
 sqlcmd -S "${DB_HOST},${DB_PORT}" -U "${DB_USER}" -P "${DB_PASSWORD}" -C \
   -Q "IF DB_ID('${DB_NAME}') IS NULL CREATE DATABASE [${DB_NAME}];"
 
-python manage.py migrate --noinput
-exec python manage.py runserver 0.0.0.0:8000
+# Run the container command (see docker-compose.yml). Falls back to a sane
+# default when none is provided.
+if [ "$#" -eq 0 ]; then
+  set -- sh -c "python manage.py migrate && python manage.py ensure_superuser && python manage.py runserver 0.0.0.0:8000"
+fi
+exec "$@"
